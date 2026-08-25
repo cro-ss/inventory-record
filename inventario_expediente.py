@@ -1,6 +1,6 @@
 # Escribe tu código aquí :-)
 from pathlib import Path
-root =  Path(r'C:\Users\chris\OneDrive\Desktop\Crostian Asus\Ing_Bermeo_C\CLAUDE_CODE\GAD_PARROQUIAL_TARQUI_2026')
+root =  Path(r'C:\Users\chris\OneDrive\Desktop\Crostian Asus\Ing_Bermeo_C\CLAUDE_CODE\GAD_TARQUI_2026')
 print(root.exists())
 
 contador = 0
@@ -28,4 +28,15 @@ print(f'El número de carpetas es {directory_counter}')
 print(f'La comprobación es {directory_counter + file_counter }')
 print(f'El peso de los archivos es {round((total_weight/1024)/1024,2) } MB')
 print(f'El peso de los archivos es {round(((total_weight/1024)/1024)/1000,2) } GB')
+
+
+###### Vamos a generar comando en este script de python.
+###### Lo que buscamos aqui es presentar los resultados de nuestra mediciones.
+from datetime import datetime
+
+with open('inventario.txt','w', encoding='UTF-8') as reportes:
+    reportes.write(f'Invetario GAD_PARROQUIAL_TARQUI_2026, Documentos pertencientes al expediente de vialidad\n')
+    reportes.write(f'El número de archivos es: {file_counter}\n')
+    reportes.write(f'El número de carpetas es, {directory_counter}\n')
+    reportes.write(f'La comporbación es, {directory_counter+file_counter}\n')
 
