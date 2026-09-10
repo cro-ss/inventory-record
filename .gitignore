@@ -1,1 +1,4 @@
 inventario.txt
+invetory_claude/
+# We are ignoring a directory that even exists.
+.streamlit/

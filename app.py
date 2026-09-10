@@ -35,8 +35,27 @@ for elemento in root.rglob('*'):
    except OSError:
         no_available += 1
 
-st.metric('',f'El número de archivos es {file_counter}')
-st.metric('',f'El número de carpetas es {directory_counter}')
-st.metric('',f'La comprobación es {directory_counter + file_counter + others_counter }')
-st.metric('',f'El peso de los archivos es {round((total_weight/1024)/1024,2) } MB')
-st.metric('',f'El peso de los archivos es {round(((total_weight/1024)/1024)/1024,2) } GB')
+st.title(f'El número de archivos es')
+st.metric('',f' {file_counter}')
+st.title(f'El número de carpetas es')
+st.metric('',f' {directory_counter}')
+st.title(f'La comprobación es')
+st.metric('',f'{directory_counter + file_counter + others_counter }')
+st.title(f'El peso de los archivos es')
+st.metric('',f'{round((total_weight/1024)/1024,2) } MB')
+st.title(f'El peso de los archivos es')
+st.metric('', f' {round(((total_weight/1024)/1024)/1024,2) } GB')
+
+import anthropic
+
+client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"])
+pregunta_user = st.text_input("Make a question about measurements from the documents")
+
+if st.button("Pedir informe a Claude") and pregunta_user != "":
+    pregunta = f"{pregunta_user} Datos del censo hoy: {file_counter+directory_counter}  File's size today{round(((total_weight/1024)/1024)/1024,2) } GB"          # tu prompt, con tus números adentro: {file_counter}, {total_weight}...
+    respuesta = client.messages.create(
+        model="claude-sonnet-5",           # el ID exacto, copiado de docs.claude.com/en/docs/about-claude/models — elige el más barato
+        max_tokens=400,
+        messages=[{"role": "user", "content": pregunta}],
+    )
+    st.write(respuesta.content[0].text)
