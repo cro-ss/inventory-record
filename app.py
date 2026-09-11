@@ -1,5 +1,6 @@
 import streamlit as st
 from pathlib import Path
+import pandas as pd
 st.title('inventory')
 st.metric('Archivos_Documentos_PARAPEPUDOS_OCIOSOS', 1999 )
 
@@ -46,13 +47,31 @@ st.metric('',f'{round((total_weight/1024)/1024,2) } MB')
 st.title(f'El peso de los archivos es')
 st.metric('', f' {round(((total_weight/1024)/1024)/1024,2) } GB')
 
-import anthropic
+# calling a csv history
+history= pd.read_csv('history.csv', parse_dates=["date"])
+st.dataframe(history)
+st.line_chart(history, x='date', y='n_elements')
+context= history.tail(8).to_csv(index=False)
 
+
+
+
+
+
+
+
+
+
+###############################_____________CLAUDE___________________________###################################
+# HERE WE JUST CALLING AN API THAT CAN MAKE ASSUMPTIONS ON MY DATA
+# Claude won't read dataframe just str which means that i need to return the csv
+import anthropic
+context= history.tail(8).to_csv(index=False)
 client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"])
-pregunta_user = st.text_input("Make a question about measurements from the documents")
+pregunta_user = st.text_input('')
 
 if st.button("Pedir informe a Claude") and pregunta_user != "":
-    pregunta = f"{pregunta_user} Datos del censo hoy: {file_counter+directory_counter}  File's size today{round(((total_weight/1024)/1024)/1024,2) } GB"          # tu prompt, con tus números adentro: {file_counter}, {total_weight}...
+    pregunta = f"Tu rol es de analista de datos experto en contratación pública, el contexto es:{context}, Pregunta:{pregunta_user} "          # tu prompt, con tus números adentro: {file_counter}, {total_weight}...
     respuesta = client.messages.create(
         model="claude-sonnet-5",           # el ID exacto, copiado de docs.claude.com/en/docs/about-claude/models — elige el más barato
         max_tokens=400,
