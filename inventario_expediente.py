@@ -43,6 +43,8 @@ print(f'El peso de los archivos es {round(((total_weight/1024)/1024)/1024,2) } G
 
 ###### Vamos a generar comando en este script de python.
 ###### Lo que buscamos aqui es presentar los resultados de nuestra mediciones.
+total_elements=directory_counter+file_counter
+total_weight_mb= (total_weight/1024)/1024
 from datetime import datetime
 
 with open('inventario.txt','w', encoding='UTF-8') as reportes:
@@ -56,6 +58,8 @@ with open('inventario.txt','w', encoding='UTF-8') as reportes:
     reportes.write(f'El peso total de los archivos es: {round(((total_weight/1024)/1024)/1024,2)}GB\n')
     reportes.write(f'Los archivos no leidos son : {no_available}\n')
 
-
+####### We've created a csv that will register new elements every day (row)
+with open('history.csv','a',encoding='UTF-8') as new_rows:
+    new_rows.write(f'{datetime.now().strftime('%Y-%m-%d')},{file_counter},{directory_counter},{total_elements},{round(total_weight_mb,2)},{others_counter}\n')
 
 
