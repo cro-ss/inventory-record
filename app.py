@@ -51,7 +51,7 @@ st.metric('', f' {round(((total_weight/1024)/1024)/1024,2) } GB')
 history= pd.read_csv('history.csv', parse_dates=["date"])
 st.dataframe(history)
 st.line_chart(history, x='date', y='n_elements')
-context= history.tail(8).to_csv(index=False)
+context = history.tail(8).to_csv(index=False)
 
 
 
@@ -70,11 +70,24 @@ context= history.tail(8).to_csv(index=False)
 client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"])
 pregunta_user = st.text_input('')
 
-if st.button("Pedir informe a Claude") and pregunta_user != "":
-    pregunta = f"Tu rol es de analista de datos experto en contratación pública, el contexto es:{context}, Pregunta:{pregunta_user} "          # tu prompt, con tus números adentro: {file_counter}, {total_weight}...
-    respuesta = client.messages.create(
-        model="claude-sonnet-5",           # el ID exacto, copiado de docs.claude.com/en/docs/about-claude/models — elige el más barato
-        max_tokens=400,
-        messages=[{"role": "user", "content": pregunta}],
-    )
-    st.write(respuesta.content[0].text)
+
+for i in range(100):
+    if st.button("Pedir informe a Claude") and pregunta_user != "":
+        pregunta = f"""Tu rol es de analista de datos experto en contratación pública, el contexto es:{context}.
+                        Algo importante que tienes que entender es que en una fecha (2026-08-17 hasta 2026-08-24) si hubo crecimiento real y orgánico del expediente, con algunos elementos por leer debido al MAXPATH.
+                        Despues desde 2026-08-26 al 2026-09-04 creamos un if para leer los n_unclassified, los elementos que existian pero no eran leidos por la limitación del MAXPATH.
+                        Desde el 2026-09-07 en adelante, al romper la barrera de caracteres se pudo identificar si los archivos de rutas grandes eran files or directories.  
+                        Pregunta:{pregunta_user} """          # tu prompt, con tus números adentro: {file_counter}, {total_weight}...
+        respuesta = client.messages.create(
+            model="claude-sonnet-5",           # el ID exacto, copiado de docs.claude.com/en/docs/about-claude/models — elige el más barato
+            max_tokens=8000,
+            messages=[{"role": "user", "content": pregunta}],
+        )
+
+        for bloque in respuesta.content:
+        
+            if bloque.type == 'text':
+                st.write(bloque.text)
+            
+        #st.write(respuesta.stop_reason)
+        #st.write(respuesta.usage)
