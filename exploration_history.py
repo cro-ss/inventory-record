@@ -13,8 +13,13 @@ dict_reader = csv.DictReader(file_dict)
 dict_data = list(dict_reader)
 print(dict_data)
 
-##writing csv files
-history_file = open('history.csv','a', newline = '', encoding='UTF-8')
-history_writer= csv.writer(history_file)
-history_writer.writerow(['pepe','ociosa','ola','carebola','pelo_corto','pepudo',])
-history_file.close() 
+## We are creating our own tester, which track the increses in files
+
+pre_last = None
+diff = 0
+for row in dict_data:
+    actual = int(row['n_elements'])
+    if pre_last is not None:
+        diff= actual-pre_last
+        print(row['date'],diff)
+    pre_last = actual
