@@ -1,14 +1,14 @@
 # Escribe tu código aquí :-)
 from pathlib import Path
 root =  Path(r'C:\Users\chris\OneDrive\Desktop\Crostian Asus\Ing_Bermeo_C\CLAUDE_CODE\GAD_TARQUI_2026')
-print(root.exists())
+# print(root.exists())
 
 contador = 0
 for elemento in root.rglob('*'):
-    print(elemento)
+    #print(elemento)
     #print(elemento.stat().st_size)
     contador = contador+1
-print('Elementos en el expediente', contador)
+#print('Elementos en el expediente', contador)
 #### Parte 2 pesar cada uno de los documentos.
 #---------- probamos primero el elemento tipo stat
 #-------------------------------------------------------------
@@ -20,7 +20,7 @@ no_available = 0
 others_counter=0
 
 for elemento in root.rglob('*'):
-   print(len(str(elemento)))
+   #print(len(str(elemento)))
    try:
     if elemento.is_file() == True:
         file_counter = file_counter + 1
@@ -47,6 +47,10 @@ total_elements=directory_counter+file_counter
 total_weight_mb= (total_weight/1024)/1024
 from datetime import datetime
 
+
+
+
+
 with open('inventario.txt','w', encoding='UTF-8') as reportes:
     reportes.write(f'{root.name}, Documentos pertencientes al expediente de vialidad\n')
     reportes.write(f'Generado: {datetime.now().strftime("%d/%b/%Y %H:%M:%S")}\n')
@@ -58,8 +62,24 @@ with open('inventario.txt','w', encoding='UTF-8') as reportes:
     reportes.write(f'El peso total de los archivos es: {round(((total_weight/1024)/1024)/1024,2)}GB\n')
     reportes.write(f'Los archivos no leidos son : {no_available}\n')
 
-####### We've created a csv that will register new elements every day (row)
-with open('history.csv','a',encoding='UTF-8') as new_rows:
-    new_rows.write(f'{datetime.now().strftime('%Y-%m-%d')},{file_counter},{directory_counter},{total_elements},{round(total_weight_mb,2)},{others_counter}\n')
 
+
+### September 27 2026
+### Create a days evaluator, for that we need todays date
+import csv
+today = datetime.now().strftime(f'%Y-%m-%d')
+### we always compare with the last saved date in history.csv
+today_comp = open('history.csv',encoding='UTF-8')
+today_reader = csv.DictReader(today_comp)
+today_dict = list(today_reader)
+print(f'{'El diccionario de hoy '},{today_dict}')
+### we use our knowledge in list to find the last date
+last_today = today_dict[-1]['date']
+### The csv just wil be modified if the last is different that todays date
+if today != last_today:
+####### We've created a csv that will register new elements every day (row)
+    with open('history.csv','a',encoding='UTF-8') as new_rows:
+        new_rows.write(f'{today},{file_counter},{directory_counter},{total_elements},{round(total_weight_mb,2)},{others_counter}\n')
+else:
+    print('You just added todays tracking')
 
