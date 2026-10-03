@@ -18,9 +18,11 @@ print(dict_data)
 
 pre_last = None
 pre_day = None
-diff = 0
+#pre_diff = dict_data[0]
+#diff = int(pre_diff['n_elements'])
+diff = None
 delta_date = None
-mean_delta=0
+mean_delta= None
 difference = None
 for row in dict_data:
     ## current date in date format
@@ -34,9 +36,10 @@ for row in dict_data:
         delta_date = current_date_format - pre_day
         mean_delta = diff/delta_date.days
         difference= delta_date.days  
-    
+        print(row['date'], f'{diff}  ' ,f'   delta between two dates {difference}',f'   Mean files per day {round(mean_delta,0)}')
+    else:
+        print(row['date'], f'{diff}  ' ,f'   delta between two dates {difference}',f'   Mean files per day {mean_delta}')
 
-    print(row['date'], f'{diff}  ' ,f'   delta between two dates {difference}',f'   Mean files per day {round(mean_delta,0)}')
     pre_last = actual
     pre_day = current_date_format
 
